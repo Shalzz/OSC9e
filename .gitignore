@@ -1,3 +1,11 @@
 .DS_STORE
 a.out
 *.class
+*.ko
+*.o
+*.cmd
+*.html
+*.order
+*.symvers
+*.mod.*
+.*
