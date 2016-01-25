@@ -30,6 +30,7 @@ int main(void)
         printf("osh>");
         fflush(stdout);
 		
+        int bg_job = 0;
         int num = get_input(args);
         if(!num)
 			continue;
@@ -37,6 +38,11 @@ int main(void)
         if(strcmp(args[0],"exit") == 0) {
 			break;
 		}
+        
+        if(*args[num-1] == '&') {
+            bg_job = 1;
+            args[num-1] = NULL;
+        }
         
         pid_t pid = fork();
         
@@ -48,7 +54,7 @@ int main(void)
 			execvp(args[0],args);
 		}
 		else { /* parent process */
-			if(*args[num-1] != '&')
+			if(!bg_job)
 				wait(NULL);
 		}
     }
@@ -81,7 +87,7 @@ int get_input(char *args[]) {
 	if(size == 0)
 		return 0;
 	
-	// format the input string			
+	// format the input string
 	input[size - 1] = '\0';				// use this since we know '\n' is included everytime
 	input = strim(input);
         
@@ -91,12 +97,8 @@ int get_input(char *args[]) {
 		args[n_spaces++] = p;
 		p = strtok (NULL, " ");
 	}
-	args[n_spaces] = 0;  // append NULL at the end
-	
-	for(int i = 0;i < n_spaces;i++) {
-		printf("%s ",args[i]);
-	}
-
+	args[n_spaces] = '\0';  // append NULL at the end
+    
 	return n_spaces;
 }
 
